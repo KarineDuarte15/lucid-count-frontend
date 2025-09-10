@@ -72,15 +72,15 @@ export default function LoginPage() {
           unoptimized={true} 
         />
         {/* Overlay para escurecer a imagem e melhorar a legibilidade do texto */}
-        <div className="absolute inset-0 bg-background opacity-50"></div>
+        <div className="absolute inset-0 bg-border opacity-40"></div>
 
         {/* Conteúdo sobre a imagem */}
         <div className="relative z-10">
-          {/* Logo da ACI Contabilidade - Substitua pelo seu componente de logo se tiver */}
+          {/* Logo da Empresa */}
           <div className="mb-4">
              <Image 
-                src="/login-background1.png" // << COLOQUE O CAMINHO DO SEU LOGO AQUI
-                alt="Logo Aci Contabilidade"
+                src="/login-background1.png" 
+                alt="Logo da Empresa"
                 width={600}
                 height={600}
              />

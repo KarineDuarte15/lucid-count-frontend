@@ -21,7 +21,7 @@ export interface Documento {
 export interface RespostaProcessamento {
   documento_id: number;
   tipo_documento: string;
-  dados_extraidos: Record<string, any>; 
+  dados_extraidos: Record<string, unknown>; 
 }
 
 export interface DocumentosExigidos {
@@ -35,6 +35,29 @@ const apiClient = axios.create({
    baseURL: 'http://localhost:8000',
 });
 export default apiClient;
+
+export const getEmpresas = async (): Promise<Empresa[]> => { 
+  try {
+    const response = await apiClient.get<Empresa[]>('/empresas/');
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao buscar empresas:", error);
+    throw error;
+  }
+};
+
+export const getKpis = async (cnpj: string, data_inicio: string, data_fim: string) => {
+  try {
+    const regime = "Simples Nacional"; // Ajuste conforme necessário
+    const response = await apiClient.get('/analytics/kpis', {
+      params: { cnpj, regime, data_inicio, data_fim }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao buscar KPIs:", error);
+    throw error;
+  }
+};
 
 // Suas outras funções (login, getEmpresas, etc.) devem estar aqui
 export const getDocumentos = async (): Promise<Documento[]> => {
@@ -68,7 +91,7 @@ export const getDocumentosExigidos = async (): Promise<DocumentosExigidos> => {
     }
 };
 
-export const salvarDadosDocumento = async (documentoId: number, dados: Record<string, any>) => {
+export const salvarDadosDocumento = async (documentoId: number, dados: Record<string, unknown>) => {
     try {
         const response = await apiClient.put(`/documentos/${documentoId}/dados`, dados);
         return response.data;
@@ -83,7 +106,7 @@ export const criarEmpresa = async (cnpj: string, regime: string, documentos_ids:
     const response = await apiClient.post<Empresa>('/empresas/', {
       cnpj,
       regime,
-      documentos_ids,
+      documentos_ids: documentos_ids,
     });
     return response.data;
   } catch (error) {

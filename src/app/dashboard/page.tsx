@@ -110,7 +110,7 @@ export default function DashboardPage() {
         onClose={() => setIsModalCadastroOpen(false)}
         onEmpresaCadastrada={handleEmpresaCadastrada}
       />
-      <div className="bg-background flex-1 flex flex-col">
+      <div className="bg-border flex-1 flex flex-col">
         {/* ✅ CORREÇÃO 4: Passamos a lista de objetos Empresa para o Header */}
         <Header
           empresas={empresas}
@@ -129,16 +129,16 @@ export default function DashboardPage() {
             <KpiCard title="Crescimento da Receita" value={kpiData?.crescimento_faturamento_percentual ?? null} isLoading={isLoading} />
           </section>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <section className="bg-text-primary p-6 rounded-lg shadow-md">
-              <h2 className="text-xl font-bold text-background mb-4">Composição dos Impostos</h2>
+            <section className="bg-text-secondary p-6 rounded-lg shadow-md">
+              <h2 className="text-xl font-bold text-text-tertiary mb-4">Composição dos Impostos</h2>
               {error && !isLoading ? ( // Mostra o erro apenas se não estiver a carregar
                 <div className="text-red-400 text-center">{error}</div>
               ) : (
                 <ImpostosChart data={kpiData?.total_impostos_por_tipo || null} isLoading={isLoading} />
               )}
             </section>
-            <section className="bg-text-primary p-6 rounded-lg shadow-md">
-                <h2 className="text-xl font-bold text-primary-card mb-4">Visão Geral</h2>
+            <section className="bg-text-secondary p-6 rounded-lg shadow-md">
+                <h2 className="text-xl font-bold text-text-tertiary mb-4">Visão Geral</h2>
             </section>
           </div>
         </main>

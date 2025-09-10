@@ -3,7 +3,6 @@
 
 import { useState } from 'react';
 import { criarEmpresa } from '../service/api'; // Importa a função da API
-import { AxiosError } from 'axios';
 import { FaTimes } from 'react-icons/fa';
 
 
@@ -29,7 +28,6 @@ export default function ModalCadastroEmpresa({ isOpen, onClose, onEmpresaCadastr
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Se o modal não estiver aberto, não renderiza nada
   if (!isOpen) {
     return null;
   }
@@ -54,20 +52,29 @@ export default function ModalCadastroEmpresa({ isOpen, onClose, onEmpresaCadastr
       onClose(); // Fecha o modal
       setCnpj(''); // Limpa o formulário
       setRegime('Simples Nacional');
-    } catch (err) {
-      // Tratamento de erro mais específico
-      if (err instanceof AxiosError && err.response?.data?.detail) {
-        setError(`Erro: ${err.response.data.detail}`);
+    } catch (err: any) {
+      // ✅ CORREÇÃO: Lógica para extrair e formatar a mensagem de erro do FastAPI
+      if (err.response && err.response.data && err.response.data.detail) {
+        if (Array.isArray(err.response.data.detail)) {
+          // Para erros de validação 422
+          const firstError = err.response.data.detail[0];
+          const campo = firstError.loc[1] || 'desconhecido';
+          const msg = firstError.msg || 'valor inválido';
+          setError(`Erro de Validação: ${msg} (no campo: ${campo})`);
+        } else {
+          // Para outros erros (ex: 409 - Conflito)
+          setError(err.response.data.detail);
+        }
       } else {
-        setError('Ocorreu um erro ao cadastrar a empresa. Tente novamente.');
+        setError("Ocorreu um erro inesperado ao finalizar o cadastro.");
       }
-      console.error(err);
     } finally {
-      setIsLoading(false);
+       setIsLoading(false);
     }
   };
 
   if (!isOpen) return null;
+
 
   return (
     // Overlay (fundo escuro)

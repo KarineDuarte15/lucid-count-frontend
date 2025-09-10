@@ -33,23 +33,23 @@ export default function Header({
   onToggleSidebar
 }: HeaderProps) {
   return (
-    <header className="flex justify-between items-center p-2 bg-background relative">
+    <header className="flex justify-between items-center p-2 bg-border relative">
       <div className="flex items-center">
        <button 
           onClick={onToggleSidebar} 
-          className="p-2 mr-2 text-text-primary hover:bg-primary-card rounded-md"
+          className="p-2 mr-2 text-text-primary hover:bg-border rounded-md"
           aria-label="Abrir menu"
         >
           <FaBars className="h-6 w-6" />
         </button>
         <Image src="/login-background1.png" alt="Lucid Count Logo" width={160} height={160} />
-        <h1 className="text-2xl font-bold text-text-primary ml-3">Dashboard</h1>
+        <h1 className="text-2xl font-bold text-background ml-3">Dashboard</h1>
       </div>
       <div className="flex items-center gap-4">
         <select
           value={selectedCnpj}
           onChange={(e) => onCnpjChange(e.target.value)}
-          className="bg-primary text-accent p-2 rounded-md border border-gray-600 focus:ring-accent focus:border-accent min-w-[220px]"
+          className="bg-background text-border p-2 rounded-md border border-text-secondary focus:ring-text-secondary focus:border-text-secondary min-w-[220px]"
         >
           <option value="" disabled>Selecione um CNPJ</option>
           {empresas.map((empresa) => (
@@ -59,7 +59,7 @@ export default function Header({
           ))}
         </select>
 
-        <select className="bg-primary text-accent p-2 rounded-md border border-gray-600 focus:ring-accent focus:border-accent min-w-[220px]">
+        <select className="bg-background text-border p-2 rounded-md border border-text-secondary focus:ring-text-secondary focus:border-text-secondary min-w-[220px]">
           <option value="" disabled>Selecione um regime</option>
           <option>Simples Nacional</option>
           <option>Lucro Presumido</option>
@@ -71,7 +71,7 @@ export default function Header({
           startDate={startDate}
           endDate={endDate}
           onChange={onDateChange}
-          className="bg-primary text-accent p-2 rounded-md w-64 border border-gray-600 focus:ring-accent focus:border-accent"
+          className="bg-background text-border p-2 rounded-md border border-text-secondary focus:ring-text-secondary focus:border-text-secondary min-w-[220px]"
           dateFormat="dd/MM/yyyy"
         />
         <ProfileDropdown />

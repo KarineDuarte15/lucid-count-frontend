@@ -40,12 +40,12 @@ export default function Sidebar({ isOpen, onClose, onAbrirModalCadastro }: Sideb
      <aside
         // A lógica de translação permanece, garantindo a animação de deslize.
         // O z-index 50 garante que ela fique na frente de tudo.
-        className={`fixed top-0 left-0 h-full w-64 bg-primary-card p-4 flex flex-col z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 h-full w-64 bg-background p-4 flex flex-col z-50 transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="mb-4">
-          <h2 className="text-xl font-bold text-text-primary text-center">Menu</h2>
+          <h2 className="text-xl font-bold text-primary-card text-center">Menu</h2>
         </div>
         <nav className="flex flex-col gap-2">
           <SidebarItem icon={FaUpload} text="Cadastrar Empresa" onClick={onAbrirModalCadastro} />
