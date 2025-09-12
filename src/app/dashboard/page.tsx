@@ -23,7 +23,12 @@ interface Empresa {
 // Interface KpiData (sem alterações)
 interface KpiData {
   cnpj_consultado: string;
-  carga_tributaria_percentual: string;
+  carga_tributaria_percentual: {
+    Mes_Atual: string;
+    Projecao_Mes_1: string;
+    Projecao_Mes_2: string;
+    Projecao_Mes_3: string;
+  } | null; // Adicione | null para segurança
   ticket_medio: string;
   crescimento_faturamento_percentual: string;
   total_impostos_por_tipo: { [key: string]: string };
@@ -124,7 +129,7 @@ export default function DashboardPage() {
         <main className="bg-primary-card flex-1 p-8 overflow-y-auto">
           <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <KpiCard title="Faturamento Total" value={kpiData?.total_impostos_por_tipo?.FATURAMENTO_TOTAL ?? 'R$ 0,00'} isLoading={isLoading} />
-            <KpiCard title="Carga Tributária" value={kpiData?.carga_tributaria_percentual ?? null} isLoading={isLoading} />
+            <KpiCard title="Carga Tributária" value={kpiData?.carga_tributaria_percentual?.Mes_Atual ?? null} isLoading={isLoading} />
             <KpiCard title="Ticket Médio" value={kpiData?.ticket_medio ?? null} isLoading={isLoading} />
             <KpiCard title="Crescimento da Receita" value={kpiData?.crescimento_faturamento_percentual ?? null} isLoading={isLoading} />
           </section>
