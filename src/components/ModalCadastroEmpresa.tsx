@@ -2,9 +2,9 @@
 'use client';
 
 import { useState } from 'react';
-import { criarEmpresa } from '../service/api'; // Importa a função da API
+import { criarEmpresa, EmpresaData } from '../service/api'; // Importa a função da API
 import { FaTimes } from 'react-icons/fa';
-
+import axios from 'axios'; 
 
 
 // A interface Empresa que já usamos em outros lugares
@@ -44,30 +44,44 @@ export default function ModalCadastroEmpresa({ isOpen, onClose, onEmpresaCadastr
       return;
     }
 
-    try {
-      // ✅ CORREÇÃO: Passamos um array vazio para documentosIds, pois este modal não gerencia uploads.
-      const novaEmpresa = await criarEmpresa(cnpj, regime, []);
+    try{
+      // ✅ CORREÇÃO 1: Construir o objeto de dados da empresa
+      const empresaParaCriar: EmpresaData = {
+        cnpj: cnpj,
+        regime_tributario: regime,
+        ativa: true, // Adiciona um valor padrão
+      };
+
+      // ✅ CORREÇÃO 2: Chamar a API com o objeto correto
+      const novaEmpresa = await criarEmpresa(empresaParaCriar);
+
       alert('Empresa cadastrada com sucesso!');
-      onEmpresaCadastrada(novaEmpresa); // Envia a nova empresa para o componente pai
-      onClose(); // Fecha o modal
-      setCnpj(''); // Limpa o formulário
+
+      // ✅ CORREÇÃO 3: Usar a prop e a variável, resolvendo os erros de "unused vars"
+      onEmpresaCadastrada(novaEmpresa); 
+      
+      onClose();
+      setCnpj('');
       setRegime('Simples Nacional');
-    } catch (err: any) {
-      // ✅ CORREÇÃO: Lógica para extrair e formatar a mensagem de erro do FastAPI
-      if (err.response && err.response.data && err.response.data.detail) {
-        if (Array.isArray(err.response.data.detail)) {
-          // Para erros de validação 422
-          const firstError = err.response.data.detail[0];
+
+    } catch (err) { // ✅ CORREÇÃO 4: Tratamento de erro sem o tipo "any"
+      console.error(err);
+      let errorDetail = "Ocorreu um erro inesperado ao finalizar o cadastro.";
+
+      if (axios.isAxiosError(err) && err.response && err.response.data?.detail) {
+        const responseDetail = err.response.data.detail;
+        if (Array.isArray(responseDetail)) {
+          const firstError = responseDetail[0];
           const campo = firstError.loc[1] || 'desconhecido';
           const msg = firstError.msg || 'valor inválido';
-          setError(`Erro de Validação: ${msg} (no campo: ${campo})`);
+          errorDetail = `Erro de Validação: ${msg} (no campo: ${campo})`;
         } else {
-          // Para outros erros (ex: 409 - Conflito)
-          setError(err.response.data.detail);
+          errorDetail = responseDetail;
         }
-      } else {
-        setError("Ocorreu um erro inesperado ao finalizar o cadastro.");
       }
+      
+      setError(errorDetail);
+
     } finally {
        setIsLoading(false);
     }
