@@ -1,53 +1,56 @@
 // src/components/Sidebar.tsx
+'use client';
+
 import Image from 'next/image';
-import Link from 'next/link'; // <-- ADICIONADO: Importação do Link
-import { FaUpload, FaDollarSign, FaChartBar, FaChartPie, FaPercentage, FaFileInvoice, FaRegFileArchive } from 'react-icons/fa';
+import Link from 'next/link';
+import { useState } from 'react';
+import { FaUpload, FaDollarSign, FaChartBar, FaChartPie, FaPercentage, FaFileInvoice, FaRegFileArchive, FaTachometerAlt } from 'react-icons/fa';
 
-// O componente SidebarItem agora pode ser um Link ou um button
-const SidebarItem = ({ icon, text, href, onClick }: { icon: React.ElementType, text: string, href?: string, onClick?: () => void }) => {
+const SidebarItem = ({ icon, text, href, isExpanded }: { icon: React.ElementType, text: string, href: string, isExpanded: boolean }) => {
   const Icon = icon;
-  
-  const content = (
-    <>
-      <Icon className="mr-4 text-xl" />
-      <span className="font-medium">{text}</span>
-    </>
+
+  return (
+    <Link href={href} className="flex items-center w-full px-4 py-3 text-left text-text-secondary hover:bg-primary hover:text-accent rounded-lg transition-colors duration-200">
+      <Icon className="text-xl" />
+      <span className={`ml-4 font-medium transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
+        {text}
+      </span>
+    </Link>
   );
-
-  const className = "flex items-center w-full px-4 py-3 text-left text-text-secondary hover:bg-primary hover:text-accent rounded-lg transition-colors duration-200";
-
-  if (href) {
-    return <Link href={href} className={className}>{content}</Link>;
-  }
-
-  return <button onClick={onClick} className={className}>{content}</button>;
 };
 
+// O Sidebar agora controla seu próprio estado de "hover"
+export default function Sidebar() {
+  const [isExpanded, setIsExpanded] = useState(false);
 
-interface SidebarProps {
-  isOpen: boolean;
-  onClose: () => void;
-  // A prop onAbrirModalCadastro não é mais necessária
-}
-
-export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   return (
-    <>
-      <div onClick={onClose} className={`fixed inset-0 bg-primary bg-opacity-30 z-40 transition-opacity duration-300 ${ isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} />
-      <aside className={`fixed top-0 left-0 h-full w-64 bg-background p-4 flex flex-col z-50 transform transition-transform duration-300 ease-in-out ${ isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="mb-4 flex justify-center">
-          <Image src="/logosidebar.png" alt="Lucid Count Logo" width={180} height={180}/>
-        </div>
-        <nav className="flex flex-col gap-2">
-          <SidebarItem icon={FaUpload} text="Cadastrar Empresa" href="/cadastro-empresa" />
-          <SidebarItem icon={FaRegFileArchive} text="Empresa" />
-          <SidebarItem icon={FaDollarSign} text="Faturamento" />
-          <SidebarItem icon={FaChartBar} text="Área de KPIs" />
-          <SidebarItem icon={FaChartPie} text="Gráficos" />
-          <SidebarItem icon={FaPercentage} text="Impostos" />
-          <SidebarItem icon={FaFileInvoice} text="Gerar Relatório" />
-        </nav>
-      </aside>
-    </>
+    <aside 
+      className={`bg-background p-4 flex flex-col z-50 transition-all duration-300 ease-in-out ${isExpanded ? 'w-64' : 'w-20'}`}
+      onMouseEnter={() => setIsExpanded(true)}
+      onMouseLeave={() => setIsExpanded(false)}
+    >
+      {/* INÍCIO DA ALTERAÇÃO: Logo agora é um link */}
+      <div className="mb-4 flex justify-center">
+        <Link href="/dashboard">
+          <Image src="/logosidebar.png" alt="Lucid Count Logo" width={isExpanded ? 180 : 40} height={isExpanded ? 180 : 40} className="transition-all duration-300"/>
+        </Link>
+      </div>
+      {/* FIM DA ALTERAÇÃO */}
+      
+      <nav className="flex flex-col gap-2 flex-1">
+        <SidebarItem icon={FaUpload} text="Cadastrar Empresa" href="/cadastro-empresa" isExpanded={isExpanded} />
+        <SidebarItem icon={FaRegFileArchive} text="Empresas" href="/empresas" isExpanded={isExpanded}/>
+        <SidebarItem icon={FaDollarSign} text="Faturamento" href="#" isExpanded={isExpanded}/>
+        <SidebarItem icon={FaChartBar} text="Área de KPIs" href="#" isExpanded={isExpanded}/>
+        <SidebarItem icon={FaChartPie} text="Gráficos" href="#" isExpanded={isExpanded}/>
+        <SidebarItem icon={FaPercentage} text="Impostos" href="#" isExpanded={isExpanded}/>
+        <SidebarItem icon={FaFileInvoice} text="Gerar Relatório" href="#" isExpanded={isExpanded}/>
+      </nav>
+      
+      {/* Botão para voltar ao Dashboard */}
+      <div className="mt-auto">
+        <SidebarItem icon={FaTachometerAlt} text="Voltar ao Dashboard" href="/dashboard" isExpanded={isExpanded}/>
+      </div>
+    </aside>
   );
 }

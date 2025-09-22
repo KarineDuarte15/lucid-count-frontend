@@ -114,4 +114,16 @@ export const uploadDocumentos = async (
   return resultadosUpload.flat();
 };
 
+
 export default apiClient;
+export const getDocumentosPorEmpresa = async (empresaId: number): Promise<Documento[]> => {
+  try {
+    const response = await apiClient.get<Documento[]>('/documentos/', {
+      params: { empresa_id: empresaId }
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Erro ao buscar documentos para a empresa ${empresaId}:`, error);
+    throw error;
+  }
+};

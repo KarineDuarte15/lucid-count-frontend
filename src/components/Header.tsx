@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import ProfileDropdown from './ProfileDropdown';
 import Image from 'next/image';
-import { FaBars } from 'react-icons/fa';
+
 
 // ✅ CORREÇÃO 1: Definimos a mesma interface Empresa aqui
 interface Empresa {
@@ -20,7 +20,7 @@ interface HeaderProps {
   startDate: Date | null;
   endDate: Date | null;
   onDateChange: (dates: [Date | null, Date | null]) => void;
-  onToggleSidebar: () => void;
+  
 }
 
 export default function Header({
@@ -29,19 +29,12 @@ export default function Header({
   onCnpjChange,
   startDate,
   endDate,
-  onDateChange,
-  onToggleSidebar
+  onDateChange
+ 
 }: HeaderProps) {
   return (
     <header className="flex justify-between items-center p-2 bg-border relative">
       <div className="flex items-center">
-       <button 
-          onClick={onToggleSidebar} 
-          className="p-2 mr-2 text-text-primary hover:bg-border rounded-md"
-          aria-label="Abrir menu"
-        >
-          <FaBars className="h-6 w-6" />
-        </button>
         <Image src="/login-background1.png" alt="Lucid Count Logo" width={160} height={160} />
         <h1 className="text-2xl font-bold text-background ml-3">Dashboard</h1>
       </div>

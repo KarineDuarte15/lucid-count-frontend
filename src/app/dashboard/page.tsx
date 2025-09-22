@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
-import { getEmpresas, getKpis, KpiData, Empresa } from '../../service/api'; // Corrigido para importar tudo de 'api.ts'
+import { getEmpresas, getKpis, KpiData, Empresa } from '../../service/api';
 import Header from '@/components/Header';
 import KpiCard from '@/components/KpiCard';
 import ImpostosChart from '@/components/ImpostosChart';
@@ -16,7 +16,6 @@ export default function DashboardPage() {
   const [kpiData, setKpiData] = useState<KpiData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [startDate, endDate] = dateRange;
 
   useEffect(() => {
@@ -63,10 +62,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex h-screen">
-      <Sidebar 
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-      />
+      <Sidebar />
       <div className="bg-border flex-1 flex flex-col">
         <Header
           empresas={empresas}
@@ -75,7 +71,6 @@ export default function DashboardPage() {
           startDate={startDate}
           endDate={endDate}
           onDateChange={setDateRange}
-          onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
         />
         <main className="bg-primary-card flex-1 p-8 overflow-y-auto">
           <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -85,7 +80,7 @@ export default function DashboardPage() {
             <KpiCard title="Crescimento da Receita" value={kpiData?.crescimento_faturamento_percentual ?? null} isLoading={isLoading} />
           </section>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <section className="bg-text-secondary p-6 rounded-lg shadow-md">
+            <section className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-xl font-bold text-text-tertiary mb-4">Composição dos Impostos</h2>
               {error && !isLoading ? (
                 <div className="text-red-400 text-center">{error}</div>
@@ -93,7 +88,7 @@ export default function DashboardPage() {
                 <ImpostosChart data={kpiData?.total_impostos_por_tipo || null} isLoading={isLoading} />
               )}
             </section>
-            <section className="bg-text-secondary p-6 rounded-lg shadow-md">
+            <section className="bg-white p-6 rounded-lg shadow-md">
                 <h2 className="text-xl font-bold text-text-tertiary mb-4">Visão Geral</h2>
             </section>
           </div>
